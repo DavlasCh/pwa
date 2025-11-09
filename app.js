@@ -49,3 +49,7 @@ function actualizarCarrito() {
   });
   totalP.textContent = `Total: $${total.toLocaleString()}`;
 }
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarCarrito();
+}
