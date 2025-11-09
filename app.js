@@ -34,3 +34,18 @@ function agregarAlCarrito(id) {
   carrito.push(producto);
   actualizarCarrito();
 }
+function actualizarCarrito() {
+  listaCarrito.innerHTML = "";
+  let total = 0;
+  carrito.forEach((item, index) => {
+    total += item.precio;
+    const li = document.createElement("li");
+    li.textContent = `${item.nombre} - $${item.precio.toLocaleString()}`;
+    const btn = document.createElement("button");
+    btn.textContent = "❌";
+    btn.onclick = () => eliminarDelCarrito(index);
+    li.appendChild(btn);
+    listaCarrito.appendChild(li);
+  });
+  totalP.textContent = `Total: $${total.toLocaleString()}`;
+}
