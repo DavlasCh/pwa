@@ -87,3 +87,5 @@ function mostrarPedidos() {
     listaPedidos.appendChild(li);
   });
 }
+mostrarProductos();
+mostrarPedidos();
