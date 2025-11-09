@@ -53,3 +53,21 @@ function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   actualizarCarrito();
 }
+btnComprar.addEventListener("click", () => {
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío");
+  } else {
+    const nuevoPedido = {
+      id: Date.now(),
+      productos: carrito.map(p => p.nombre),
+      total: carrito.reduce((sum, p) => sum + p.precio, 0),
+      fecha: new Date().toLocaleString()
+    };
+    pedidos.push(nuevoPedido);
+    localStorage.setItem("pedidos", JSON.stringify(pedidos));
+    carrito = [];
+    actualizarCarrito();
+    mostrarPedidos();
+    alert("✅ ¡Pedido registrado con éxito!");
+  }
+});
