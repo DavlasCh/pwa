@@ -71,3 +71,19 @@ btnComprar.addEventListener("click", () => {
     alert("✅ ¡Pedido registrado con éxito!");
   }
 });
+function mostrarPedidos() {
+  listaPedidos.innerHTML = "";
+  if (pedidos.length === 0) {
+    listaPedidos.innerHTML = "<li>No hay pedidos aún</li>";
+    return;
+  }
+  pedidos.forEach(pedido => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>Pedido #${pedido.id}</strong> (${pedido.fecha})<br>
+      ${pedido.productos.join(", ")}<br>
+      <em>Total: $${pedido.total.toLocaleString()}</em>
+    `;
+    listaPedidos.appendChild(li);
+  });
+}
