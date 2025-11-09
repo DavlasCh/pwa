@@ -29,3 +29,8 @@ function mostrarProductos() {
     productosDiv.appendChild(card);
   });
 }
+function agregarAlCarrito(id) {
+  const producto = productos.find(p => p.id === id);
+  carrito.push(producto);
+  actualizarCarrito();
+}
