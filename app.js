@@ -1,3 +1,4 @@
+// --- Datos de productos ---
 const productos = [
   { id: 1, nombre: "Cargador Rápido USB-C", precio: 40000, imagen: "Img/Imagen1.png" },
   { id: 2, nombre: "Cable Tipo C Reforzado", precio: 25000, imagen: "Img/charger.png" },
@@ -16,6 +17,7 @@ const btnComprar = document.getElementById("btn-comprar");
 let carrito = [];
 let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 
+// --- Render de productos ---
 function mostrarProductos() {
   productos.forEach(p => {
     const card = document.createElement("div");
@@ -29,30 +31,40 @@ function mostrarProductos() {
     productosDiv.appendChild(card);
   });
 }
+
+// --- Carrito ---
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   carrito.push(producto);
   actualizarCarrito();
 }
+
 function actualizarCarrito() {
   listaCarrito.innerHTML = "";
   let total = 0;
+
   carrito.forEach((item, index) => {
     total += item.precio;
     const li = document.createElement("li");
     li.textContent = `${item.nombre} - $${item.precio.toLocaleString()}`;
+
     const btn = document.createElement("button");
     btn.textContent = "❌";
     btn.onclick = () => eliminarDelCarrito(index);
+
     li.appendChild(btn);
     listaCarrito.appendChild(li);
   });
+
   totalP.textContent = `Total: $${total.toLocaleString()}`;
 }
+
 function eliminarDelCarrito(index) {
   carrito.splice(index, 1);
   actualizarCarrito();
 }
+
+// --- Compra / pedidos ---
 btnComprar.addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("Tu carrito está vacío");
@@ -63,20 +75,26 @@ btnComprar.addEventListener("click", () => {
       total: carrito.reduce((sum, p) => sum + p.precio, 0),
       fecha: new Date().toLocaleString()
     };
+
     pedidos.push(nuevoPedido);
     localStorage.setItem("pedidos", JSON.stringify(pedidos));
+
     carrito = [];
     actualizarCarrito();
     mostrarPedidos();
+
     alert("✅ ¡Pedido registrado con éxito!");
   }
 });
+
 function mostrarPedidos() {
   listaPedidos.innerHTML = "";
+
   if (pedidos.length === 0) {
     listaPedidos.innerHTML = "<li>No hay pedidos aún</li>";
     return;
   }
+
   pedidos.forEach(pedido => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -87,13 +105,16 @@ function mostrarPedidos() {
     listaPedidos.appendChild(li);
   });
 }
+
+// --- Inicialización ---
 mostrarProductos();
 mostrarPedidos();
-// --- Registro del Service Worker para PWA ---
+
+// --- Registro del Service Worker (ruta para GitHub Pages) ---
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js")
+      .register("/pwa/sw.js")
       .then(reg => {
         console.log("Service Worker registrado:", reg.scope);
       })
