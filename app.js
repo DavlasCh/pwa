@@ -1,4 +1,3 @@
-// --- Datos de productos ---
 const productos = [
   { id: 1, nombre: "Cargador Rápido USB-C", precio: 40000, imagen: "Img/Imagen1.png" },
   { id: 2, nombre: "Cable Tipo C Reforzado", precio: 25000, imagen: "Img/charger.png" },
@@ -17,7 +16,6 @@ const btnComprar = document.getElementById("btn-comprar");
 let carrito = [];
 let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 
-// --- Render de productos ---
 function mostrarProductos() {
   productos.forEach(p => {
     const card = document.createElement("div");
@@ -32,7 +30,6 @@ function mostrarProductos() {
   });
 }
 
-// --- Carrito ---
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   carrito.push(producto);
@@ -64,7 +61,6 @@ function eliminarDelCarrito(index) {
   actualizarCarrito();
 }
 
-// --- Compra / pedidos ---
 btnComprar.addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("Tu carrito está vacío");
@@ -106,11 +102,10 @@ function mostrarPedidos() {
   });
 }
 
-// --- Inicialización ---
 mostrarProductos();
 mostrarPedidos();
 
-// --- Registro del Service Worker (ruta para GitHub Pages) ---
+// --- Service Worker en raíz ---
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
