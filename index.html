@@ -8,7 +8,7 @@
     <!-- Manifest PWA -->
     <link rel="manifest" href="manifest.json" />
 
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#0f766e" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -16,32 +16,24 @@
 </head>
 <body>
     <header class="app-header">
-        <div class="brand">
-            <div class="brand-icon">AM</div>
-            <div>
-                <h1>Accesorios Móviles</h1>
-                <p class="brand-subtitle">Catálogo, carrito y pedidos en una sola app</p>
-            </div>
+        <div class="header-inner">
+            <h1>Accesorios Móviles</h1>
+            <p>Selecciona productos, arma tu carrito y registra pedidos.</p>
         </div>
     </header>
 
     <main class="layout">
         <!-- Columna izquierda: productos -->
-        <section class="panel panel-main">
-            <div class="panel-header">
-                <h2>Productos</h2>
-                <p class="panel-subtitle">Selecciona los accesorios que necesitas</p>
-            </div>
+        <section class="col-main">
+            <h2 class="section-title">Productos</h2>
+            <p class="section-subtitle">Toca “Agregar” para enviarlos al carrito.</p>
             <section id="productos" class="grid"></section>
         </section>
 
         <!-- Columna derecha: carrito + pedidos + cámara -->
-        <section class="side-column">
+        <section class="col-side">
             <section id="carrito" class="panel">
-                <div class="panel-header">
-                    <h2>Carrito</h2>
-                    <p class="panel-subtitle">Resumen de los productos seleccionados</p>
-                </div>
+                <h2 class="section-title">Carrito</h2>
                 <ul id="lista-carrito" class="list"></ul>
                 <div class="cart-footer">
                     <p id="total" class="total">Total: $0</p>
@@ -50,25 +42,19 @@
             </section>
 
             <section id="pedidos" class="panel">
-                <div class="panel-header">
-                    <h2>Pedidos realizados</h2>
-                    <p class="panel-subtitle">Historial guardado en la nube</p>
-                </div>
+                <h2 class="section-title">Pedidos realizados</h2>
                 <ul id="lista-pedidos" class="list list-pedidos"></ul>
             </section>
 
             <section id="camara" class="panel">
-                <div class="panel-header">
-                    <h2>Cámara</h2>
-                    <p class="panel-subtitle">Toma una foto de referencia del pedido</p>
-                </div>
+                <h2 class="section-title">Cámara</h2>
+                <p class="section-subtitle">Puedes tomar una foto de referencia del pedido.</p>
 
                 <div class="camera-wrapper">
                     <video
                         id="video-camara"
                         autoplay
                         playsinline
-                        class="camera-video"
                     ></video>
                     <canvas id="foto-camara" style="display:none;"></canvas>
                 </div>
@@ -85,14 +71,14 @@
     </main>
 
     <footer class="app-footer">
-        <p>© Accesorios Móviles · PWA Demo</p>
+        <p>© Accesorios Móviles · PWA</p>
     </footer>
 
     <!-- Firebase compat -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-    <!-- Lógica de la app -->
+    <!-- Lógica de la app (sin cambios) -->
     <script src="app.js"></script>
 </body>
 </html>
