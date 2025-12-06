@@ -74,3 +74,10 @@ footer {
     border-radius: 8px;
     margin-bottom: 0.3rem;
 }
+
+/* Foto tomada desde la cámara */
+#contenedor-foto img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+}

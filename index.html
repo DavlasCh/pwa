@@ -2,18 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Accesorios Móviles</title>
 
     <!-- Manifest PWA -->
     <link rel="manifest" href="manifest.json" />
 
-    <!-- Color barra navegador / splash -->
+    <!-- Colores PWA / modo standalone -->
     <meta name="theme-color" content="#0078d7" />
-
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -38,12 +34,37 @@
             <h2>Pedidos realizados</h2>
             <ul id="lista-pedidos"></ul>
         </section>
+
+        <!-- SECCIÓN CÁMARA -->
+        <section id="camara" class="carrito">
+            <h2>Escanear / Tomar foto</h2>
+            <video
+                id="video-camara"
+                autoplay
+                playsinline
+                style="width: 100%; border-radius: 12px;"
+            ></video>
+            <canvas id="foto-camara" style="display:none;"></canvas>
+
+            <div style="margin-top: 0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button id="btn-iniciar-camara">Encender cámara</button>
+                <button id="btn-tomar-foto">Tomar foto</button>
+                <button id="btn-detener-camara">Apagar cámara</button>
+            </div>
+
+            <div id="contenedor-foto" style="margin-top:0.8rem;"></div>
+        </section>
     </main>
 
     <footer>
         <p>Accesorios Móviles</p>
     </footer>
 
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- Lógica de la app -->
     <script src="app.js"></script>
 </body>
 </html>

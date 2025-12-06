@@ -1,4 +1,4 @@
-const CACHE_NAME = "accesorios-moviles-v1";
+const CACHE_NAME = "accesorios-moviles-v2";
 
 const URLS_TO_CACHE = [
   "./",

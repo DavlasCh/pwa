@@ -1,7 +1,7 @@
 {
   "name": "Accesorios Móviles",
   "short_name": "Accesorios",
-  "description": "Catálogo de accesorios para móviles con carrito y pedidos.",
+  "description": "Catálogo de accesorios para móviles con carrito, pedidos, cámara y sincronización en la nube.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
