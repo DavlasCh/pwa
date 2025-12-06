@@ -8,59 +8,87 @@
     <!-- Manifest PWA -->
     <link rel="manifest" href="manifest.json" />
 
-    <!-- Colores PWA / modo standalone -->
-    <meta name="theme-color" content="#0078d7" />
+    <meta name="theme-color" content="#0f172a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <header>
-        <h1>Accesorios Móviles</h1>
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-icon">AM</div>
+            <div>
+                <h1>Accesorios Móviles</h1>
+                <p class="brand-subtitle">Catálogo, carrito y pedidos en una sola app</p>
+            </div>
+        </div>
     </header>
 
-    <main>
-        <section id="productos" class="grid"></section>
-
-        <section id="carrito" class="carrito">
-            <h2>Carrito</h2>
-            <ul id="lista-carrito"></ul>
-            <p id="total">Total: $0</p>
-            <button id="btn-comprar">Finalizar compra</button>
-        </section>
-
-        <section id="pedidos" class="carrito">
-            <h2>Pedidos realizados</h2>
-            <ul id="lista-pedidos"></ul>
-        </section>
-
-        <!-- SECCIÓN CÁMARA -->
-        <section id="camara" class="carrito">
-            <h2>Escanear / Tomar foto</h2>
-            <video
-                id="video-camara"
-                autoplay
-                playsinline
-                style="width: 100%; border-radius: 12px;"
-            ></video>
-            <canvas id="foto-camara" style="display:none;"></canvas>
-
-            <div style="margin-top: 0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <button id="btn-iniciar-camara">Encender cámara</button>
-                <button id="btn-tomar-foto">Tomar foto</button>
-                <button id="btn-detener-camara">Apagar cámara</button>
+    <main class="layout">
+        <!-- Columna izquierda: productos -->
+        <section class="panel panel-main">
+            <div class="panel-header">
+                <h2>Productos</h2>
+                <p class="panel-subtitle">Selecciona los accesorios que necesitas</p>
             </div>
+            <section id="productos" class="grid"></section>
+        </section>
 
-            <div id="contenedor-foto" style="margin-top:0.8rem;"></div>
+        <!-- Columna derecha: carrito + pedidos + cámara -->
+        <section class="side-column">
+            <section id="carrito" class="panel">
+                <div class="panel-header">
+                    <h2>Carrito</h2>
+                    <p class="panel-subtitle">Resumen de los productos seleccionados</p>
+                </div>
+                <ul id="lista-carrito" class="list"></ul>
+                <div class="cart-footer">
+                    <p id="total" class="total">Total: $0</p>
+                    <button id="btn-comprar" class="btn-primary">Finalizar compra</button>
+                </div>
+            </section>
+
+            <section id="pedidos" class="panel">
+                <div class="panel-header">
+                    <h2>Pedidos realizados</h2>
+                    <p class="panel-subtitle">Historial guardado en la nube</p>
+                </div>
+                <ul id="lista-pedidos" class="list list-pedidos"></ul>
+            </section>
+
+            <section id="camara" class="panel">
+                <div class="panel-header">
+                    <h2>Cámara</h2>
+                    <p class="panel-subtitle">Toma una foto de referencia del pedido</p>
+                </div>
+
+                <div class="camera-wrapper">
+                    <video
+                        id="video-camara"
+                        autoplay
+                        playsinline
+                        class="camera-video"
+                    ></video>
+                    <canvas id="foto-camara" style="display:none;"></canvas>
+                </div>
+
+                <div class="camera-actions">
+                    <button id="btn-iniciar-camara" class="btn-secondary">Encender cámara</button>
+                    <button id="btn-tomar-foto" class="btn-secondary">Tomar foto</button>
+                    <button id="btn-detener-camara" class="btn-ghost">Apagar</button>
+                </div>
+
+                <div id="contenedor-foto" class="camera-photo"></div>
+            </section>
         </section>
     </main>
 
-    <footer>
-        <p>Accesorios Móviles</p>
+    <footer class="app-footer">
+        <p>© Accesorios Móviles · PWA Demo</p>
     </footer>
 
-    <!-- Firebase SDK (compat) -->
+    <!-- Firebase compat -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
