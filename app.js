@@ -49,18 +49,14 @@ function mostrarProductos() {
     card.classList.add("card");
 
     card.innerHTML = `
-      <img src="${p.imagen}" alt="${p.nombre}">
-      <div>
-        <h3>${p.nombre}</h3>
-        <p>$${p.precio.toLocaleString()}</p>
-        <small>Toque para agregar al carrito</small>
-      </div>
+      <img src="${p.imagen}" alt="${p.nombre}" class="card-img">
+      <h3>${p.nombre}</h3>
+      <p class="precio">$${p.precio.toLocaleString()}</p>
+      <small class="hint">Toque para agregar al carrito</small>
     `;
 
     // 👉 Toda la tarjeta agrega al carrito
-    card.addEventListener("click", () => {
-      agregarAlCarrito(p.id);
-    });
+    card.addEventListener("click", () => agregarAlCarrito(p.id));
 
     productosDiv.appendChild(card);
   });
