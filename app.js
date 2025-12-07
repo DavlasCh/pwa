@@ -11,8 +11,19 @@ const firebaseConfig = {
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Acceso a Firestore
+// Firestore (instancia principal)
 const db = firebase.firestore();
+
+firebase
+  .firestore()
+  .enablePersistence()
+  .then(() => {
+    console.log("Firestore offline persistence habilitado");
+  })
+  .catch(err => {
+    // Normal que falle si hay varias pestañas abiertas, no es crítico
+    console.warn("No se pudo habilitar persistence offline:", err.code || err);
+  });
 
 const productos = [
   { id: 1, nombre: "Cargador Rápido USB-C", precio: 40000, imagen: "Img/Imagen1.png" },
@@ -23,31 +34,41 @@ const productos = [
   { id: 6, nombre: "Funda Antigolpes", precio: 35000, imagen: "Img/tempered-glass.png" }
 ];
 
-const productosDiv    = document.getElementById("productos");
-const listaCarrito    = document.getElementById("lista-carrito");
-const listaPedidos    = document.getElementById("lista-pedidos");
-const totalP          = document.getElementById("total");
-const btnComprar      = document.getElementById("btn-comprar");
+const productosDiv = document.getElementById("productos");
+const listaCarrito = document.getElementById("lista-carrito");
+const listaPedidos = document.getElementById("lista-pedidos");
+const totalP       = document.getElementById("total");
+const btnComprar   = document.getElementById("btn-comprar");
 
 let carrito = [];
-let pedidos = []; // Firestore será la fuente principal
+let pedidos = []; // Firestore será la fuente principal (con backup en localStorage)
 
 function mostrarProductos() {
   productos.forEach(p => {
     const card = document.createElement("div");
     card.classList.add("card");
+
     card.innerHTML = `
       <img src="${p.imagen}" alt="${p.nombre}">
-      <h3>${p.nombre}</h3>
-      <p>$${p.precio.toLocaleString()}</p>
-      <button onclick="agregarAlCarrito(${p.id})">Agregar</button>
+      <div>
+        <h3>${p.nombre}</h3>
+        <p>$${p.precio.toLocaleString()}</p>
+        <small>Toque para agregar al carrito</small>
+      </div>
     `;
+
+    // 👉 Toda la tarjeta agrega al carrito
+    card.addEventListener("click", () => {
+      agregarAlCarrito(p.id);
+    });
+
     productosDiv.appendChild(card);
   });
 }
 
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
+  if (!producto) return;
   carrito.push(producto);
   actualizarCarrito();
 }
@@ -85,15 +106,14 @@ async function guardarPedidoEnFirestore(pedido) {
       ...pedido,
       creadoEn: firebase.firestore.FieldValue.serverTimestamp()
     });
-
     console.log("Pedido guardado en Firestore");
   } catch (error) {
     console.error("Error al guardar pedido:", error);
-    alert("Error guardando pedido en Firestore.");
+    alert("Error guardando pedido en la nube.");
   }
 }
 
-// Cargar pedidos desde Firestore
+// Cargar pedidos desde Firestore (una sola vez al inicio)
 async function cargarPedidosDesdeFirestore() {
   try {
     const snapshot = await db
@@ -101,15 +121,24 @@ async function cargarPedidosDesdeFirestore() {
       .orderBy("creadoEn", "desc")
       .get();
 
-    pedidos = snapshot.docs.map(doc => doc.data());
+    pedidos = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: data.id,
+        productos: data.productos || [],
+        total: data.total || 0,
+        fecha: data.fecha || ""
+      };
+    });
 
-    // Para offline: sincronizamos localStorage
+    // Backup local para offline manual extra
     localStorage.setItem("pedidos", JSON.stringify(pedidos));
 
     mostrarPedidos();
   } catch (error) {
-    console.warn("Fallo Firestore, usando localStorage...");
-    pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+    console.warn("Error leyendo de Firestore, usando localStorage:", error);
+    const pedidosLocal = JSON.parse(localStorage.getItem("pedidos")) || [];
+    pedidos = pedidosLocal;
     mostrarPedidos();
   }
 }
@@ -127,11 +156,14 @@ btnComprar.addEventListener("click", async () => {
     fecha: new Date().toLocaleString()
   };
 
-  pedidos.push(nuevoPedido);
+  // 1) Actualizamos memoria
+  pedidos.unshift(nuevoPedido); // unshift para que aparezca primero
   localStorage.setItem("pedidos", JSON.stringify(pedidos));
 
+  // 2) Intentamos guardar en Firestore
   await guardarPedidoEnFirestore(nuevoPedido);
 
+  // 3) Limpiamos carrito y refrescamos UI
   carrito = [];
   actualizarCarrito();
   mostrarPedidos();
@@ -158,9 +190,9 @@ function mostrarPedidos() {
   });
 }
 
-const videoCamara     = document.getElementById("video-camara");
-const canvasFoto      = document.getElementById("foto-camara");
-const contenedorFoto  = document.getElementById("contenedor-foto");
+const videoCamara    = document.getElementById("video-camara");
+const canvasFoto     = document.getElementById("foto-camara");
+const contenedorFoto = document.getElementById("contenedor-foto");
 
 const btnIniciarCamara = document.getElementById("btn-iniciar-camara");
 const btnTomarFoto     = document.getElementById("btn-tomar-foto");
@@ -184,7 +216,7 @@ async function iniciarCamara() {
     });
     videoCamara.srcObject = streamCamara;
   } catch (err) {
-    console.error("Error cámara:", err);
+    console.error("Error al acceder a la cámara:", err);
     alert("No se pudo acceder a la cámara.");
   }
 }
@@ -195,11 +227,19 @@ function tomarFoto() {
     return;
   }
 
-  canvasFoto.width  = videoCamara.videoWidth;
-  canvasFoto.height = videoCamara.videoHeight;
+  const width  = videoCamara.videoWidth;
+  const height = videoCamara.videoHeight;
+
+  if (!width || !height) {
+    alert("La cámara aún no está lista, intenta de nuevo.");
+    return;
+  }
+
+  canvasFoto.width  = width;
+  canvasFoto.height = height;
 
   const ctx = canvasFoto.getContext("2d");
-  ctx.drawImage(videoCamara, 0, 0, canvasFoto.width, canvasFoto.height);
+  ctx.drawImage(videoCamara, 0, 0, width, height);
 
   const dataUrl = canvasFoto.toDataURL("image/png");
 
@@ -207,6 +247,7 @@ function tomarFoto() {
   const img = document.createElement("img");
   img.src = dataUrl;
   contenedorFoto.appendChild(img);
+
 }
 
 function detenerCamara() {
@@ -222,10 +263,12 @@ btnTomarFoto.addEventListener("click", tomarFoto);
 btnDetenerCamara.addEventListener("click", detenerCamara);
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("sw.js")
-    .then(reg => console.log("SW OK:", reg.scope))
-    .catch(err => console.error("SW ERROR:", err));
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then(reg => console.log("SW registrado:", reg.scope))
+      .catch(err => console.error("Error al registrar SW:", err));
+  });
 }
 
 async function init() {

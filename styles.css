@@ -81,21 +81,20 @@ body {
 }
 
 .card {
-    background: #ffffff;
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-    border: 1px solid #e5e7eb;
-    padding: 0.7rem;
-    text-align: left;
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    gap: 0.6rem;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.6rem;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    cursor: pointer;              /* 👈 importante */
+    transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .card:hover {
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
-    transform: translateY(-2px);
+    background: #eef2ff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
 }
 
 .card img {
